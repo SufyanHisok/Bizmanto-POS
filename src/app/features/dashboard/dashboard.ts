@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { PosCartService } from '../../core/services/pos-cart.service';
+import { appUrl } from '../../core/utils/app-url';
 import { PkrPipe } from '../../shared/pipes/pkr.pipe';
 import { BmButton } from '../../shared/ui/bm-button/bm-button';
 
@@ -24,7 +25,6 @@ export class Dashboard {
   readonly userName = computed(() => this.auth.user()?.name ?? 'User');
 
   openPosWindow(): void {
-    const url = `${window.location.origin}/pos`;
-    window.open(url, 'bizmanto-pos', 'noopener,noreferrer');
+    window.open(appUrl('pos'), 'bizmanto-pos', 'noopener,noreferrer');
   }
 }

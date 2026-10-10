@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { appUrl } from '../../core/utils/app-url';
 import { Sidenav } from '../sidenav/sidenav';
 import { Topnav } from '../topnav/topnav';
 
@@ -17,7 +18,6 @@ export class Shell {
   }
 
   openPosWindow(): void {
-    const url = `${window.location.origin}/pos`;
-    window.open(url, 'bizmanto-pos', 'noopener,noreferrer');
+    window.open(appUrl('pos'), 'bizmanto-pos', 'noopener,noreferrer');
   }
 }
