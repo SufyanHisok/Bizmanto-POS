@@ -1,0 +1,14 @@
+<div class="shell" [class.shell--collapsed]="collapsed()">
+  <app-sidenav
+    class="shell__sidenav"
+    [collapsed]="collapsed()"
+    (openPos)="openPosWindow()"
+  />
+
+  <div class="shell__main">
+    <app-topnav (menuClick)="toggleNav()" (openPos)="openPosWindow()" />
+    <main class="shell__content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

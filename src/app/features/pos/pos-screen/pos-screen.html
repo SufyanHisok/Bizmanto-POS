@@ -1,0 +1,288 @@
+<div class="pos">
+  <header class="pos__bar">
+    <div class="pos__bar-left">
+      <div class="pos__menu-wrap">
+        <button type="button" class="pos__menu-btn" (click)="toggleMenu()" aria-label="Menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+
+        @if (menuOpen()) {
+          <div class="pos__menu" role="menu">
+            <button type="button" (click)="goBackToApp()">
+              <span class="material-symbols-outlined">arrow_back</span>
+              Back to dashboard
+            </button>
+            <button type="button" (click)="openHoldRecall(); closeMenu()">
+              <span class="material-symbols-outlined">pause_circle</span>
+              Hold / recall
+            </button>
+            <button type="button" (click)="clearBill(); closeMenu()">
+              <span class="material-symbols-outlined">delete_sweep</span>
+              Clear bill
+            </button>
+            <button type="button" (click)="closeMenu()">
+              <span class="material-symbols-outlined">close</span>
+              Close menu
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="pos__brand">
+        <img src="/assets/img/logo.svg" alt="Bizmanto" />
+        <div>
+          <strong>Bizmanto</strong>
+          <span>POS</span>
+        </div>
+      </div>
+
+      <span class="pos__mode" [class.pos__mode--return]="mode() === 'return'">
+        {{ mode() === 'return' ? 'Sale return' : 'Sale' }}
+      </span>
+    </div>
+
+    <div class="pos__bar-right">
+      <div class="pos__status" [class.pos__status--offline]="!online()">
+        <span class="pos__dot"></span>
+        {{ online() ? 'Online' : 'Offline' }}
+      </div>
+
+      <div class="pos__chip">
+        <span class="material-symbols-outlined">storefront</span>
+        {{ terminal().terminalName }}
+      </div>
+
+      <div class="pos__chip">
+        <span class="material-symbols-outlined">calendar_today</span>
+        Day {{ terminal().dayOpen ? 'open' : 'closed' }}
+      </div>
+
+      <div class="pos__chip">
+        <span class="material-symbols-outlined">receipt</span>
+        INV-{{ terminal().invoiceNo }}
+      </div>
+
+      <div class="pos__chip pos__chip--time">
+        {{ now() | date: 'h:mm a' }}
+      </div>
+
+      <div class="pos__user">
+        <div class="pos__avatar">{{ user()?.name?.charAt(0)?.toUpperCase() }}</div>
+        <div>
+          <strong>{{ user()?.name }}</strong>
+          <span>{{ user()?.role }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="pos__body">
+    <section class="pos__main">
+      <div class="pos__search-wrap">
+        <span class="material-symbols-outlined pos__search-icon">search</span>
+        <input
+          class="pos__search"
+          type="search"
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)"
+          (keydown)="onSearchKey($event)"
+          placeholder="Scan barcode or search item / SKU…"
+          autofocus
+        />
+        @if (search()) {
+          <button type="button" class="pos__search-clear" (click)="search.set('')">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        }
+
+        @if (suggestions().length) {
+          <div class="pos__suggestions">
+            @for (item of suggestions(); track item.id) {
+              <button type="button" (click)="addProduct(item.id)">
+                <div>
+                  <strong>{{ item.name }}</strong>
+                  <span>{{ item.sku }} · {{ item.unit }} · Stock {{ item.stock }}</span>
+                </div>
+                <em>{{ item.price | pkr }}</em>
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="pos__table-card">
+        <div class="pos__table-head">
+          <h2>Bill items</h2>
+          <span>{{ itemCount() }} qty · {{ lines().length }} lines</span>
+        </div>
+
+        <div class="pos__table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-name">Item</th>
+                <th class="col-unit">Unit</th>
+                <th class="col-qty">Qty</th>
+                <th class="col-rate">Rate</th>
+                <th class="col-disc">Disc.</th>
+                <th class="col-amt">Amount</th>
+                <th class="col-act"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (line of lines(); track line.id) {
+                <tr>
+                  <td class="col-name">
+                    <strong>{{ line.name }}</strong>
+                    <span>{{ line.sku }}</span>
+                  </td>
+                  <td class="col-unit">
+                    <select [ngModel]="line.unit" (ngModelChange)="updateUnit(line.id, $event)">
+                      @for (unit of units; track unit) {
+                        <option [ngValue]="unit">{{ unit }}</option>
+                      }
+                    </select>
+                  </td>
+                  <td class="col-qty">
+                    <div class="qty">
+                      <button type="button" (click)="updateQty(line.id, line.qty - 1)">−</button>
+                      <input
+                        type="number"
+                        [ngModel]="line.qty"
+                        (ngModelChange)="updateQty(line.id, $event)"
+                        min="0"
+                      />
+                      <button type="button" (click)="updateQty(line.id, line.qty + 1)">+</button>
+                    </div>
+                  </td>
+                  <td class="col-rate">
+                    <input
+                      type="number"
+                      [ngModel]="line.rate"
+                      (ngModelChange)="updateRate(line.id, $event)"
+                      min="0"
+                    />
+                  </td>
+                  <td class="col-disc">
+                    <input
+                      type="number"
+                      [ngModel]="line.discount"
+                      (ngModelChange)="updateDiscount(line.id, $event)"
+                      min="0"
+                    />
+                  </td>
+                  <td class="col-amt">{{ lineAmount(line.id) | pkr }}</td>
+                  <td class="col-act">
+                    <button type="button" class="icon-danger" (click)="removeLine(line.id)" aria-label="Remove">
+                      <span class="material-symbols-outlined">delete</span>
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr class="empty-row">
+                  <td colspan="7">
+                    <div class="empty">
+                      <span class="material-symbols-outlined">shopping_basket</span>
+                      <p>Search or scan to add items</p>
+                      <small>Works for embroidery, grocery, and general retail</small>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <aside class="pos__side">
+      <div class="pos__customer">
+        <div>
+          <span class="label">Customer</span>
+          <strong>{{ customer()?.name || 'Walk-in' }}</strong>
+          @if (customer()?.phone && customer()?.phone !== '—') {
+            <small>{{ customer()?.phone }}</small>
+          }
+        </div>
+        <bm-button variant="soft" size="sm" (pressed)="openCustomer()">Change</bm-button>
+      </div>
+
+      <div class="pos__actions">
+        <button type="button" class="act" [class.is-on]="mode() === 'sale'" (click)="setSaleMode()">
+          <span class="material-symbols-outlined">sell</span>
+          Sale
+        </button>
+        <button type="button" class="act" [class.is-on]="mode() === 'return'" (click)="openSaleReturn()">
+          <span class="material-symbols-outlined">undo</span>
+          Sale return
+        </button>
+        <button type="button" class="act" (click)="openCustomer()">
+          <span class="material-symbols-outlined">person</span>
+          Customer
+        </button>
+        <button type="button" class="act" (click)="openHoldRecall()">
+          <span class="material-symbols-outlined">pause_circle</span>
+          Hold
+          @if (heldCount()) {
+            <em>{{ heldCount() }}</em>
+          }
+        </button>
+        <button type="button" class="act" (click)="clearBill()">
+          <span class="material-symbols-outlined">backspace</span>
+          Clear
+        </button>
+        <button type="button" class="act" (click)="openSplit()" [disabled]="!lines().length">
+          <span class="material-symbols-outlined">call_split</span>
+          Split pay
+        </button>
+      </div>
+
+      <div class="pos__totals">
+        <div>
+          <span>Subtotal</span>
+          <strong>{{ subtotal() | pkr }}</strong>
+        </div>
+        <div>
+          <span>Discount</span>
+          <strong>{{ discountTotal() | pkr }}</strong>
+        </div>
+        <div class="pos__grand">
+          <span>Total due</span>
+          <strong>{{ grandTotal() | pkr }}</strong>
+        </div>
+      </div>
+
+      <div class="pos__pay">
+        <bm-button
+          variant="cash"
+          size="lg"
+          [block]="true"
+          [disabled]="!lines().length"
+          (pressed)="openPayCash()"
+        >
+          <span class="material-symbols-outlined">payments</span>
+          Pay cash
+        </bm-button>
+
+        <bm-button
+          variant="secondary"
+          size="lg"
+          [block]="true"
+          [disabled]="!lines().length"
+          (pressed)="openPayCard()"
+        >
+          <span class="material-symbols-outlined">credit_card</span>
+          Pay card
+        </bm-button>
+      </div>
+    </aside>
+  </div>
+
+  @if (toast()) {
+    <div class="pos__toast">{{ toast() }}</div>
+  }
+
+  @if (menuOpen()) {
+    <button type="button" class="pos__scrim" (click)="closeMenu()" aria-label="Close menu overlay"></button>
+  }
+</div>

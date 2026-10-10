@@ -1,0 +1,37 @@
+<div class="dlg">
+  <header class="dlg__head">
+    <div>
+      <h2>Sale return</h2>
+      <p>Switch this bill to return mode and load against an invoice.</p>
+    </div>
+    <button type="button" class="dlg__close" (click)="cancel()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <div class="dlg__body">
+    <label class="field">
+      <span>Original invoice no.</span>
+      <input type="text" [(ngModel)]="invoiceNo" placeholder="e.g. INV-1038" />
+    </label>
+
+    <label class="field">
+      <span>Reason</span>
+      <select [(ngModel)]="reason">
+        <option>Customer return</option>
+        <option>Wrong item</option>
+        <option>Damaged / defect</option>
+        <option>Price adjustment</option>
+      </select>
+    </label>
+
+    @if (error()) {
+      <div class="dlg__error">{{ error() }}</div>
+    }
+  </div>
+
+  <footer class="dlg__foot">
+    <bm-button variant="secondary" (pressed)="cancel()">Cancel</bm-button>
+    <bm-button variant="danger" (pressed)="confirm()">Start return</bm-button>
+  </footer>
+</div>

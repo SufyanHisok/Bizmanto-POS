@@ -1,0 +1,42 @@
+// Exact Bizmanto purple theme (from my-theme.scss / ThemeService color: "purple")
+:root {
+  --bm-primary: #2c1338;
+  --bm-primary-mid: #411d52;
+  --bm-primary-soft: #2c13380d;
+  --bm-primary-soft-2: #eee4fd;
+  --bm-button: #673ab7;
+  --bm-button-hover: #5e35b1;
+  --bm-accent: #5d216a;
+  --bm-icon: #583967;
+  --bm-heading: #281d2e;
+  --bm-help: #412a4c;
+
+  --bm-ink: #281d2e;
+  --bm-ink-2: #4f4853;
+  --bm-muted: #787878;
+  --bm-line: #e5e5e5;
+  --bm-line-strong: #ddd;
+  --bm-surface: #ffffff;
+  --bm-canvas: #f5f5f5;
+  --bm-canvas-2: #eeeeee;
+
+  --bm-danger: #c62828;
+  --bm-danger-soft: #fdecea;
+  --bm-warning: #b7791f;
+  --bm-warning-soft: #fff8e8;
+  --bm-success: #40916c;
+  --bm-success-soft: #f2fff9;
+  --bm-offline: #9a3412;
+  --bm-offline-soft: #ffedd5;
+
+  --bm-radius: 8px;
+  --bm-radius-sm: 6px;
+  --bm-radius-lg: 10px;
+  --bm-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  --bm-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  --bm-font: 'Poppins', Verdana, Geneva, Tahoma, sans-serif;
+  --bm-topbar-h: 50px;
+  --bm-sidenav-w: 250px;
+  --bm-sidenav-collapsed: 64px;
+}

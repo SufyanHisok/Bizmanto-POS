@@ -1,0 +1,53 @@
+<aside class="sidenav" [class.sidenav--collapsed]="collapsed()">
+  <div class="sidenav__brand">
+    @if (!collapsed()) {
+      <img src="/assets/img/new-bizmanto.png" alt="Bizmanto" class="sidenav__logo" />
+      <span class="sidenav__pos">POS</span>
+    } @else {
+      <img src="/assets/img/onlyLogo.png" alt="Bizmanto" class="sidenav__logo-sm" />
+    }
+  </div>
+
+  <nav class="sidenav__nav">
+    @for (item of items; track item.label) {
+      @if (item.route && !item.action) {
+        <a
+          class="sidenav__link"
+          [routerLink]="item.route"
+          routerLinkActive="is-active"
+          (click)="onItem(item)"
+        >
+          <span class="material-symbols-outlined">{{ item.icon }}</span>
+          @if (!collapsed()) {
+            <span>{{ item.label }}</span>
+          }
+        </a>
+      } @else {
+        <button type="button" class="sidenav__link sidenav__link--pos" (click)="onItem(item)">
+          <span class="material-symbols-outlined">{{ item.icon }}</span>
+          @if (!collapsed()) {
+            <span>{{ item.label }}</span>
+          }
+        </button>
+      }
+    }
+  </nav>
+
+  <div class="sidenav__footer">
+    @if (!collapsed()) {
+      <div class="sidenav__user">
+        <span class="material-symbols-outlined">person</span>
+        <div>
+          <div class="sidenav__user-name">{{ user()?.name }}</div>
+          <div class="sidenav__user-role">{{ user()?.role }}</div>
+        </div>
+      </div>
+    }
+    <button type="button" class="sidenav__logout" (click)="logout()">
+      <span class="material-symbols-outlined">logout</span>
+      @if (!collapsed()) {
+        <span>Logout</span>
+      }
+    </button>
+  </div>
+</aside>

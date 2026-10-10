@@ -1,0 +1,35 @@
+<header class="topnav">
+  <div class="topnav__left">
+    <button type="button" class="topnav__icon-btn" (click)="menuClick.emit()" aria-label="Toggle menu">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <img
+      class="topnav__logo"
+      src="/assets/img/new-bizmanto-white.png"
+      alt="Bizmanto"
+      title="Bizmanto POS"
+    />
+    <span class="topnav__pos">POS</span>
+  </div>
+
+  <div class="topnav__right">
+    <div class="topnav__pill" [class.topnav__pill--offline]="!online()">
+      <span class="topnav__dot"></span>
+      {{ online() ? 'Online' : 'Offline' }}
+    </div>
+
+    <div class="topnav__meta hide-sm">
+      <span class="material-symbols-outlined">storefront</span>
+      {{ terminal().terminalName }}
+    </div>
+
+    <button type="button" class="topnav__pos-btn" (click)="openPos.emit()">
+      <span class="material-symbols-outlined">point_of_sale</span>
+      Open POS
+    </button>
+
+    <div class="topnav__avatar" title="{{ user()?.name }}">
+      {{ user()?.name?.charAt(0)?.toUpperCase() }}
+    </div>
+  </div>
+</header>

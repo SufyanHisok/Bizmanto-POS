@@ -1,0 +1,57 @@
+<div class="dlg">
+  <header class="dlg__head">
+    <div>
+      <h2>Pay cash</h2>
+      <p>Collect cash and return change to the customer.</p>
+    </div>
+    <button type="button" class="dlg__close" (click)="cancel()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <div class="dlg__body">
+    <div class="dlg__total">
+      <span>Total amount due</span>
+      <strong>{{ data.total | pkr }}</strong>
+    </div>
+
+    <label class="field">
+      <span>Cash tendered</span>
+      <input
+        type="number"
+        [ngModel]="tendered()"
+        (ngModelChange)="onTenderedInput($event)"
+        min="0"
+        step="1"
+        autofocus
+      />
+      <small>Amount the customer is paying now</small>
+    </label>
+
+    <div class="quick">
+      <button type="button" (click)="exact()">Exact</button>
+      <button type="button" (click)="quickFill(data.total + 50)">+50</button>
+      <button type="button" (click)="quickFill(data.total + 100)">+100</button>
+      <button type="button" (click)="nearest500()">Nearest 500</button>
+      <button type="button" (click)="quickFill(1000)">1000</button>
+      <button type="button" (click)="quickFill(5000)">5000</button>
+    </div>
+
+    <div class="dlg__change" [class.dlg__change--short]="shortfall() > 0">
+      @if (shortfall() > 0) {
+        <span>Amount short</span>
+        <strong>{{ shortfall() | pkr }}</strong>
+      } @else {
+        <span>Change to return</span>
+        <strong>{{ change() | pkr }}</strong>
+      }
+    </div>
+  </div>
+
+  <footer class="dlg__foot">
+    <bm-button variant="secondary" (pressed)="cancel()">Cancel</bm-button>
+    <bm-button variant="cash" size="lg" [disabled]="tendered() < data.total" (pressed)="pay()">
+      Pay {{ data.total | pkr }}
+    </bm-button>
+  </footer>
+</div>

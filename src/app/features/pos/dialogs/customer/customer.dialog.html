@@ -1,0 +1,42 @@
+<div class="dlg dlg--wide">
+  <header class="dlg__head">
+    <div>
+      <h2>Select customer</h2>
+      <p>Optional — leave as walk-in for counter sales.</p>
+    </div>
+    <button type="button" class="dlg__close" (click)="cancel()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <div class="dlg__body">
+    <label class="field">
+      <span>Search name or phone</span>
+      <input
+        type="search"
+        [ngModel]="query"
+        (ngModelChange)="onQuery($event)"
+        placeholder="Type to filter…"
+      />
+    </label>
+
+    <div class="list">
+      @for (customer of filtered(); track customer.id) {
+        <button type="button" class="list__item" (click)="select(customer)">
+          <div>
+            <strong>{{ customer.name }}</strong>
+            <span>{{ customer.phone }} · {{ customer.city }}</span>
+          </div>
+          <span>{{ customer.balance | pkr }} bal.</span>
+        </button>
+      } @empty {
+        <p style="color: var(--bm-muted); font-size: 0.85rem">No customers found.</p>
+      }
+    </div>
+  </div>
+
+  <footer class="dlg__foot">
+    <bm-button variant="ghost" (pressed)="clear()">Clear customer</bm-button>
+    <bm-button variant="secondary" (pressed)="cancel()">Close</bm-button>
+  </footer>
+</div>

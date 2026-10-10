@@ -1,0 +1,45 @@
+<div class="login">
+  <form class="login__card" (ngSubmit)="submit()">
+    <div class="login__logo">
+      <img src="/assets/img/big-logo.png" alt="Bizmanto" />
+      <span class="login__pos">POS</span>
+    </div>
+
+    <h1>Log In</h1>
+
+    <label class="field">
+      <span>Email or Mobile Number</span>
+      <input
+        type="text"
+        name="email"
+        [(ngModel)]="email"
+        autocomplete="username"
+        required
+      />
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        autocomplete="current-password"
+        required
+      />
+    </label>
+
+    <label class="check">
+      <input type="checkbox" [(ngModel)]="remember" name="remember" />
+      Remember me
+    </label>
+
+    @if (error()) {
+      <div class="login__error">{{ error() }}</div>
+    }
+
+    <bm-button variant="primary" size="lg" [block]="true" type="submit" [disabled]="loading()">
+      {{ loading() ? 'Signing in…' : 'Sign In' }}
+    </bm-button>
+  </form>
+</div>

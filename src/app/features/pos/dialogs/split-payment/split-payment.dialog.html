@@ -1,0 +1,38 @@
+<div class="dlg">
+  <header class="dlg__head">
+    <div>
+      <h2>Split payment</h2>
+      <p>Take part cash and part card for one bill.</p>
+    </div>
+    <button type="button" class="dlg__close" (click)="cancel()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <div class="dlg__body">
+    <div class="dlg__total">
+      <span>Total due</span>
+      <strong>{{ data.total | pkr }}</strong>
+    </div>
+
+    <div class="split-row">
+      <label class="field">
+        <span>Cash portion</span>
+        <input type="number" [ngModel]="cash()" (ngModelChange)="onCash($event)" min="0" />
+      </label>
+      <label class="field">
+        <span>Card portion</span>
+        <input type="number" [ngModel]="card()" readonly />
+      </label>
+    </div>
+
+    @if (error()) {
+      <div class="dlg__error">{{ error() }}</div>
+    }
+  </div>
+
+  <footer class="dlg__foot">
+    <bm-button variant="secondary" (pressed)="cancel()">Cancel</bm-button>
+    <bm-button variant="primary" size="lg" (pressed)="pay()">Complete split</bm-button>
+  </footer>
+</div>

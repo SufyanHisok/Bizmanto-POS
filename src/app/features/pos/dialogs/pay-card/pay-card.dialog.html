@@ -1,0 +1,45 @@
+<div class="dlg">
+  <header class="dlg__head">
+    <div>
+      <h2>Pay card</h2>
+      <p>Confirm bank card / machine payment.</p>
+    </div>
+    <button type="button" class="dlg__close" (click)="cancel()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <div class="dlg__body">
+    <div class="dlg__total">
+      <span>Amount to charge</span>
+      <strong>{{ data.total | pkr }}</strong>
+    </div>
+
+    <label class="field">
+      <span>Bank / network</span>
+      <select [(ngModel)]="bank">
+        <option>HBL</option>
+        <option>UBL</option>
+        <option>Meezan</option>
+        <option>Bank Alfalah</option>
+        <option>JazzCash</option>
+        <option>Easypaisa</option>
+        <option>Other</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Approval / reference no.</span>
+      <input type="text" [(ngModel)]="reference" placeholder="Machine slip / RR number" />
+    </label>
+
+    @if (error()) {
+      <div class="dlg__error">{{ error() }}</div>
+    }
+  </div>
+
+  <footer class="dlg__foot">
+    <bm-button variant="secondary" (pressed)="cancel()">Cancel</bm-button>
+    <bm-button variant="primary" size="lg" (pressed)="pay()">Confirm card pay</bm-button>
+  </footer>
+</div>

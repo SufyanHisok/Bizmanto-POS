@@ -1,0 +1,157 @@
+<div class="dash">
+  <div class="dash__head">
+    <div>
+      <h1>Dashboard</h1>
+      <h4>Welcome, {{ userName() }}</h4>
+    </div>
+    <bm-button variant="primary" (pressed)="openPosWindow()">
+      <span class="material-symbols-outlined">point_of_sale</span>
+      Open POS
+    </bm-button>
+  </div>
+
+  <div class="dash__kpis">
+    <div class="kpi">
+      <div class="kpi__icon">
+        <span class="material-symbols-outlined">payments</span>
+      </div>
+      <div>
+        <p class="kpi__label">Today’s sales</p>
+        <h3>{{ stats().todaySales | pkr }}</h3>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__icon">
+        <span class="material-symbols-outlined">receipt_long</span>
+      </div>
+      <div>
+        <p class="kpi__label">Invoices</p>
+        <h3>{{ stats().todayTxns }}</h3>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__icon">
+        <span class="material-symbols-outlined">local_atm</span>
+      </div>
+      <div>
+        <p class="kpi__label">Cash sales</p>
+        <h3>{{ stats().cashSales | pkr }}</h3>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__icon">
+        <span class="material-symbols-outlined">credit_card</span>
+      </div>
+      <div>
+        <p class="kpi__label">Card sales</p>
+        <h3>{{ stats().cardSales | pkr }}</h3>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__icon">
+        <span class="material-symbols-outlined">shopping_bag</span>
+      </div>
+      <div>
+        <p class="kpi__label">Avg. ticket</p>
+        <h3>{{ stats().avgTicket | pkr }}</h3>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__icon kpi__icon--warn">
+        <span class="material-symbols-outlined">inventory_2</span>
+      </div>
+      <div>
+        <p class="kpi__label">Low stock</p>
+        <h3>{{ stats().lowStockCount }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash__grid">
+    <div class="card">
+      <div class="card__head">
+        <h2>Recent sales</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Invoice</th>
+              <th>Time</th>
+              <th>Customer</th>
+              <th>Pay</th>
+              <th class="num">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (sale of recentSales(); track sale.id) {
+              <tr>
+                <td>{{ sale.invoiceNo }}</td>
+                <td>{{ sale.time }}</td>
+                <td>{{ sale.customer }}</td>
+                <td>{{ sale.method }}</td>
+                <td class="num">{{ sale.amount | pkr }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="dash__side">
+      <div class="card">
+        <div class="card__head">
+          <h2>Terminal</h2>
+        </div>
+        <div class="term">
+          <div><span>Counter</span><strong>{{ terminal().terminalName }}</strong></div>
+          <div>
+            <span>Day</span>
+            <strong>{{ terminal().dayOpen ? 'Open' : 'Closed' }}</strong>
+          </div>
+          <div><span>Next invoice</span><strong>INV-{{ terminal().invoiceNo }}</strong></div>
+          <div><span>Cash in drawer</span><strong>{{ terminal().cashInDrawer | pkr }}</strong></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <h2>Top items</h2>
+        </div>
+        <ul class="list">
+          @for (item of topItems(); track item.name) {
+            <li>
+              <div>
+                <strong>{{ item.name }}</strong>
+                <span>{{ item.qty }} sold</span>
+              </div>
+              <em>{{ item.amount | pkr }}</em>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <h2>Low stock</h2>
+        </div>
+        <ul class="list">
+          @for (item of lowStock(); track item.sku) {
+            <li>
+              <div>
+                <strong>{{ item.name }}</strong>
+                <span>{{ item.sku }}</span>
+              </div>
+              <em class="warn">{{ item.stock }} {{ item.unit }}</em>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

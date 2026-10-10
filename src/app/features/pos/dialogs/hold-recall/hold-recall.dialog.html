@@ -1,0 +1,42 @@
+<div class="dlg dlg--wide">
+  <header class="dlg__head">
+    <div>
+      <h2>Hold / recall</h2>
+      <p>Park a bill and come back to it later.</p>
+    </div>
+    <button type="button" class="dlg__close" (click)="cancel()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <div class="dlg__body">
+    @if (data.canHold) {
+      <label class="field">
+        <span>Hold label (optional)</span>
+        <input type="text" [(ngModel)]="label" placeholder="e.g. Customer at fabric counter" />
+      </label>
+      <bm-button variant="soft" [block]="true" (pressed)="hold()">Hold current bill</bm-button>
+    }
+
+    <div>
+      <strong style="font-size: 0.85rem">Held bills</strong>
+      <div class="list" style="margin-top: 0.55rem">
+        @for (held of data.held; track held.id) {
+          <button type="button" class="list__item" (click)="recall(held.id)">
+            <div>
+              <strong>{{ held.label }}</strong>
+              <span>{{ held.heldAt | date: 'short' }} · {{ held.lines.length }} lines</span>
+            </div>
+            <span>{{ holdAmount(held) | pkr }}</span>
+          </button>
+        } @empty {
+          <p style="color: var(--bm-muted); font-size: 0.85rem; margin-top: 0.5rem">No held bills.</p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <footer class="dlg__foot">
+    <bm-button variant="secondary" (pressed)="cancel()">Close</bm-button>
+  </footer>
+</div>
